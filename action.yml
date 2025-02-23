@@ -1,0 +1,39 @@
+name: "Swift propose next version"
+description: "Run action to receive next version proposition for your Swift package in plain semver format."
+author: "Filozoff"
+inputs:
+  derived-data-path:
+    description: "Derived data path (optional). Default: './.build'."
+    default: "./.build"
+  device:
+    description: "Device for which public interface is created. Use value supported by '-destination' argument in 'xcodebuild archive', e.g. 'platform=iOS Simulator,name=iPhone 14,OS=17.0'."
+    required: true
+  scheme:
+    description: "Package scheme name to analyze. To analyze whole package with multiple targets add '-Package' suffix."
+    required: true
+outputs:
+  proposed-next-version:
+    description: "A proposed next version in semver format."
+    value: ${{ steps.propose-next-version.outputs.version }}
+runs:
+  using: "composite"
+  steps:
+    - name: Check runner OS
+      if: ${{ runner.os != 'macOS' }}
+      shell: bash
+      run: |
+        echo "::error title=⛔ Unsupported OS::Action supports macOS only."
+        exit 1
+
+    - name: Check inputs
+      if: ${{ inputs.device == '' || inputs.scheme == '' }}
+      shell: bash
+      run: |
+        echo "::error title=⛔ Missing inputs::'device' or 'scheme' input is not set."
+        exit 1
+
+    - name: Propose next version
+      id: propose-next-version
+      shell: bash
+      run: |
+        echo "version=0.0.1" >> $GITHUB_OUTPUT
