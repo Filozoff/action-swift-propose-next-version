@@ -3,13 +3,13 @@ description: "Run action to receive next version proposition for your Swift pack
 author: "Filozoff"
 inputs:
   derived-data-path:
-    description: "Derived data path (optional). Default: './.build'."
+    description: "Derived data path (optional). Default: `./.build`."
     default: "./.build"
   device:
-    description: "Device for which public interface is created. Use value supported by '-destination' argument in 'xcodebuild archive', e.g. 'platform=iOS Simulator,name=iPhone 14,OS=17.0'."
+    description: "Device for which public interface is created. Use value supported by `-destination` argument in `xcodebuild archive`, e.g. `platform=iOS Simulator,name=iPhone 14,OS=17.0`."
     required: true
   scheme:
-    description: "Package scheme name to analyze. To analyze whole package with multiple targets add '-Package' suffix."
+    description: "Package scheme name to analyze. To analyze whole package with multiple targets add `-Package` suffix."
     required: true
 outputs:
   proposed-next-version:
