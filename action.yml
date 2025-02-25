@@ -36,4 +36,5 @@ runs:
       id: propose-next-version
       shell: bash
       run: |
-        echo "version=0.0.1" >> $GITHUB_OUTPUT
+        next=$(sh "${{ github.action_path }}/scripts/propose_next_version.sh" --derived-data-path "${{ inputs.derived-data-path }}" --device "${{ inputs.device }}" --scheme "${{ inputs.scheme }}")
+        echo "version=$next" >> $GITHUB_OUTPUT
