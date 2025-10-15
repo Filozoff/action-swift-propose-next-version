@@ -59,7 +59,7 @@ function make_public_interface() {
 
     for package_product in $package_products
     do
-        cat "$(find "./$DERIVED_DATA_PATH/" -name "${package_product}.swiftinterface")" >> "$packages_public_interface_path"
+        cat "$(find "./$DERIVED_DATA_PATH/" -name "${package_product}.swiftinterface")" | grep -o '^[^\/]*' >> "$packages_public_interface_path"
     done
 
     MAKE_PUBLIC_INTERFACE="$packages_public_interface_path"
