@@ -44,7 +44,7 @@ jobs:
 
       - name: Get next version proposition
         id: next-version-proposition
-        uses: Filozoff/action-swift-propose-next-version@v1
+        uses: Filozoff/action-swift-propose-next-version@v2
         with:
           derived-data-path: "derived-data"
           device: "platform=iOS Simulator,name=iPhone 16,OS=18.0"
