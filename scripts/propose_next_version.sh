@@ -110,11 +110,14 @@ function main() {
     # Check manifest diff. Any change applied to manifest may introduce a breaking change.
     # Example: adding a new dependendcy with specific version may break somebody's code they use same dependendcy but with different version.
     # Swift Package Manager does not allow to use same dependendcy with two or more different versions.
-    has_manifest_changes=$(diff "$version_manifest_path" "$current_manifest_path" | grep -c -i "^<" || true)
+    manifest_changes_number=$(diff "$version_manifest_path" "$current_manifest_path" | grep -c -i "^[<>]" || true)
 
     # Make public interfaces diffs
-    has_breaking_changes=$(diff "$version_public_interface_path" "$current_public_interface_path" | grep -c -i "^<" || true) || $has_manifest_changes
-    has_additive_changes=$(diff "$version_public_interface_path" "$current_public_interface_path" | grep -c -i "^>" || true)
+    delete_changes_number=$(diff "$version_public_interface_path" "$current_public_interface_path" | grep -c -i "^<" || true)
+    additive_changes_number=$(diff "$version_public_interface_path" "$current_public_interface_path" | grep -c -i "^>" || true)
+
+    # Breaking changes are changes that affect the public interface or the manifest.
+    breaking_changes_number=$((manifest_changes_number + delete_changes_number))
 
     # Create version based on diff output
     if [[ ! $version_tag =~ $semantic_version_regex ]]; then
@@ -124,11 +127,11 @@ function main() {
         local minor="${BASH_REMATCH[2]}"
         local patch="${BASH_REMATCH[3]}"
 
-        if [[ $has_breaking_changes -gt 0 ]]; then
+        if [[ $breaking_changes_number -gt 0 ]]; then
             major=$((major+1))
             minor=0
             patch=0
-        elif [[ $has_additive_changes -gt 0 ]]; then
+        elif [[ $additive_changes_number -gt 0 ]]; then
             minor=$((minor+1))
             patch=0
         else
