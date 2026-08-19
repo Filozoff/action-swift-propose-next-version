@@ -89,8 +89,8 @@ function main() {
     # Clean up derived data directory to prevent of any cached files usage.
     rm -rf "$DERIVED_DATA_PATH"
 
-    # Copy change tagged with given version tag to 'tmp{random}' directory by using clone of local repo and checkouting to version tag.
-    git clone "$CALL_DIR" "$temp_version_directory" --quiet --recurse-submodules
+    # Copy change tagged with given version tag to 'tmp{random}' directory by using clone of local repo and checkouting to version tag. Do not create detached HEAD.
+    git clone "$CALL_DIR" "$temp_version_directory" --quiet --recurse-submodules -c advice.detachedHead=false
     cd "$temp_version_directory"
     git checkout "$version_tag" --quiet
 
